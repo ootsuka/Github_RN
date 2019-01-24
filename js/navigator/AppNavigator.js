@@ -10,6 +10,7 @@ import { createReactNavigationReduxMiddleware, reduxifyNavigator } from 'react-n
 import WelcomePage from '../page/WelcomePage'
 import HomePage from '../page/HomePage'
 import DetailPage from '../page/DetailPage'
+import DataStoreDemoPage from '../page/DataStoreDemoPage'
 
 export const rootCom = 'Init'
 
@@ -33,6 +34,12 @@ const MainNavigator = createStackNavigator({
     screen: DetailPage,
     navigationOptions: {
 
+    }
+  },
+  DataStoreDemoPage: {
+    screen: DataStoreDemoPage,
+    navigationOptions: {
+      header: null
     }
   }
 })

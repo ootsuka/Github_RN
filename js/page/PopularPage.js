@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, View, Button} from 'react-native';
 import {createMaterialTopTabNavigator, createAppContainer} from 'react-navigation'
 
 import NavigationUtil from '../navigator/NavigationUtil'
@@ -66,6 +66,14 @@ class PopularTab extends Component<Props> {
               navigation: this.props.navigation
             }, 'DetailPage')
           }}>Go to DetailPage</Text>
+        <Button
+          title={'DataStorage demo'}
+          onPress={() => {
+            NavigationUtil.goPage({
+              navigation: this.props.navigation
+            }, 'DataStoreDemoPage')
+          }}
+          />
       </View>
     );
   }
