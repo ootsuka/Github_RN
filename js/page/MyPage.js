@@ -8,9 +8,12 @@
 
 import React, {Component} from 'react';
 import {Button, StyleSheet, Text, View} from 'react-native';
+import { connect } from 'react-redux'
+
+import actions from '../action/index'
 
 type Props = {};
-export default class MyPage extends Component<Props> {
+class MyPage extends Component<Props> {
   render() {
     const { navigation } = this.props
     return (
@@ -19,12 +22,7 @@ export default class MyPage extends Component<Props> {
           <Button
             title='change theme color'
             onPress={() => {
-              navigation.setParams({
-                theme: {
-                  tintColor: 'blue',
-                  updateTime: new Date().getTime()
-                }
-              })
+              this.props.onThemeChange('purple')
             }}
           />
       </View>
@@ -45,3 +43,10 @@ const styles = StyleSheet.create({
     margin: 10,
   },
 });
+
+const mapStateToProps = state => ({})
+const mapDispatchToProps = dispatch => ({
+  onThemeChange: theme => dispatch(actions.onThemeChange(theme))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyPage)
