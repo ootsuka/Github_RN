@@ -25,6 +25,19 @@ class MyPage extends Component<Props> {
               this.props.onThemeChange('purple')
             }}
           />
+          <Text onPress={() => {
+              NavigationUtil.goPage({
+                navigation: this.props.navigation
+              }, 'DetailPage')
+            }}>Go to DetailPage</Text>
+          <Button
+            title={'DataStorage demo'}
+            onPress={() => {
+              NavigationUtil.goPage({
+                navigation: this.props.navigation
+              }, 'DataStoreDemoPage')
+            }}
+            />
       </View>
     );
   }
