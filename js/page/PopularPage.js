@@ -7,12 +7,13 @@
  */
 
 import React, {Component} from 'react';
-import {FlatList, StyleSheet, Text, View, Button, RefreshControl} from 'react-native';
+import {FlatList, StyleSheet, Text, View, Button, RefreshControl,Image} from 'react-native';
 import {createMaterialTopTabNavigator, createAppContainer} from 'react-navigation'
 import {connect} from 'react-redux'
 
 import NavigationUtil from '../navigator/NavigationUtil'
 import actions from '../action/index'
+import PopularItem from '../common/PopularItem'
 
 const URL = 'https://api.github.com/search/repositories?q='
 const QUERY_STR = '&sort=stars'
@@ -84,11 +85,10 @@ class PopularTab extends Component<Props> {
 
   renderItem(data) {
     const item = data.item
-    return <View style={{ marginBottom: 20 }}>
-      <Text style={{ backgroundColor: '#faa' }}>
-        {JSON.stringify(item)}
-      </Text>
-    </View>
+    return <PopularItem
+      item={item}
+      onSelect={() => {}}
+      />
   }
 
   render() {
@@ -102,7 +102,6 @@ class PopularTab extends Component<Props> {
     }
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>{tabLabel}</Text>
         <FlatList
           data={store.items}
           renderItem={data => this.renderItem(data)}

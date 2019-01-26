@@ -31,6 +31,16 @@ export default class WelcomePage extends Component<Props> {
   }
 }
 
+class TabBarComponent extends React.Component {
+  constructor(props) {
+    super(props)
+    this.theme = {
+      tintColor: props.activeTintColor,
+      updateTime: new Date().getTime()
+    }
+  }
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
