@@ -50,16 +50,11 @@ export default class PopularItem extends Component<Props>{
 }
 
 const styles = StyleSheet.create({
-  author: {
-    flex: 0.5
-  },
   star: {
     flexDirection:'row',
     justifyContent:'center',
-    flex:0.5
   },
   row: {
-    flex: 1,
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center'
