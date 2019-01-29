@@ -7,10 +7,10 @@
  */
 
 import React, {Component} from 'react';
-import {FlatList, StyleSheet, Text, View, Button, RefreshControl,Image} from 'react-native';
+import {FlatList, StyleSheet, Text, View, Button, RefreshControl,Image, ActivityIndicator} from 'react-native';
 import {createMaterialTopTabNavigator, createAppContainer} from 'react-navigation'
 import {connect} from 'react-redux'
-
+import Toast from 'react-native-easy-toast'
 import NavigationUtil from '../navigator/NavigationUtil'
 import actions from '../action/index'
 import PopularItem from '../common/PopularItem'
@@ -62,6 +62,8 @@ export default class PopularPage extends Component<Props> {
   }
 }
 
+const pageSize = 10
+
 class PopularTab extends Component<Props> {
   constructor(props) {
     super(props)
@@ -73,10 +75,18 @@ class PopularTab extends Component<Props> {
     this.loadData()
   }
 
-  loadData() {
-    const {onLoadPopularData} = this.props
+  loadData(loadMore) {
+    const {onLoadPopularData, onLoadMorePopular} = this.props
     const url = this.genFetchUrl(this.storeName)
-    onLoadPopularData(this.storeName, url)
+    const store = this._store()
+    if (loadMore) {
+      onLoadMorePopular(storeName, ++store.pageIndex, pageSize, store.items, callBack => {
+        this.refs.toast.show('no more')
+      })
+    } else {
+      onLoadPopularData(this.storeName, url, pageSize)
+    }
+
   }
 
   genFetchUrl(key) {
@@ -91,19 +101,37 @@ class PopularTab extends Component<Props> {
       />
   }
 
-  render() {
-    const {popular, tabLabel} = this.props
+  _store() {
+    const { popular } = this.props
     let store = popular[this.storeName]
     if (!store) {
       store = {
-        items:[],
-        isLoading:false
+        items: [],
+        isLoading: false,
+        projectModes: [],
+        hideLoadingMore: true,
       }
     }
+    return store
+  }
+
+  getIndicator() {
+    return this._store().hideLoadingMore ? null :
+      <View style={styles.indicatorContainer}>
+        <ActivityIndicator
+          style={styles.indicator}
+          />
+        <Text>Loading More</Text>
+      </View>
+  }
+
+  render() {
+    const { tabLabel } = this.props
+    let store = this._store()
     return (
       <View style={styles.container}>
         <FlatList
-          data={store.items}
+          data={store.projectModes}
           renderItem={data => this.renderItem(data)}
           keyExtractor={item =>"" + item.id}
           refreshControl={
@@ -115,8 +143,16 @@ class PopularTab extends Component<Props> {
               onRefresh={()=> this.loadData()}
               tintColor={THEME_COLOR}
               />
-
           }
+          ListFooterComponent={() => this.getIndicator()}
+          OnEndReached={() => {
+            this.loadData(true)//load more data is true
+          }}
+          OnEndReachedThreshold={0.5}
+          />
+        <Toast
+          ref={'toast'}
+          position={'center'}
           />
       </View>
     );
@@ -128,7 +164,10 @@ const mapStateToProps = (state) => ({
   })
 
 const mapDispatchToProps = (dispatch) => ({
-    onLoadPopularData: (storeName, url) => dispatch(actions.onLoadPopularData(storeName, url))
+    onLoadPopularData: (storeName, url, pageSize) => dispatch(actions.onLoadPopularData(storeName, url, pageSize)),
+    onLoadMorePopular: (storeName, pageIndex, pageSize, items, callBack) => dispatch(actions.onLoadMorePopular(
+      storeName, pageIndex, pageSize, items, callBack
+    ))
 })
 
 const PopularTabPage = connect(mapStateToProps, mapDispatchToProps)(PopularTab)
@@ -151,5 +190,12 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 6,
     marginBottom: 6
+  },
+  indicatorContainer: {
+    alignItems: 'center'
+  },
+  indicator: {
+    color: 'red',
+    margin: 10
   }
 });

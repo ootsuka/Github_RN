@@ -9,8 +9,11 @@ export default function onAction(state = defaultState, action) {
         ...state,
         [action.storeName]: {
           ...state[action.storeName],
-          items: action.item,
-          isLoading: false
+          items: action.items, // original data
+          projectModes: action.projectModes, //data to show this round
+          isLoading: false,
+          hideLoadingMore: false,
+          pageIndex: action.pageIndex
         }
       }
     case Types.POPULAR_REFRESH:
@@ -29,6 +32,25 @@ export default function onAction(state = defaultState, action) {
            isLoading: false
          }
        }
+    case Types.LOAD_POPULAR_MORE_SUCCESS:
+      return {
+        ...state,
+        [action.storeName]: {
+          ...state[action.storeName],
+          projectModes: action.projectModes,
+          hideLoadingMore: false,
+          pageIndex: action.pageIndex
+        }
+      }
+    case Types.LOAD_POPULAR_MORE_FAIL:
+      return {
+        ...state,
+        [action.storeName]: {
+          ...state[action.storeName],
+          hideLoadingMore: true,
+          pageIndex: action.pageIndex
+        }
+      }
     default:
     return state
   }
