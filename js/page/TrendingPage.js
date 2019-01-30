@@ -6,9 +6,9 @@
  * @flow
  */
 
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import {Platform, StyleSheet, Text, View, Button} from 'react-native';
+import {Platform, StyleSheet, Text, View, Button} from 'react-native'
 
 import actions from '../action/index'
 

@@ -11,6 +11,7 @@ import {Button, StyleSheet, Text, View} from 'react-native';
 import { connect } from 'react-redux'
 
 import actions from '../action/index'
+import NavigationBar from '../common/NavigationBar'
 
 type Props = {};
 class MyPage extends Component<Props> {

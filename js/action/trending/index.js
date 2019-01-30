@@ -1,16 +1,16 @@
 import Types from '../types'
-import {FLAG_STORAGE}, DataStore from '../../expand/dao/DataStore'
+import DataStore, {FLAG_STORAGE} from '../../expand/dao/DataStore'
 
-export function onLoadPopularData(storeName, url, pageSize) {
+export function onRereshTrending(storeName, url, pageSize) {
   return dispatch => {
     dispatch({
-      type: Types.POPULAR_REFRESH,
+      type: Types.TRENDING_REFRESH,
       storeName: storeName
     })
     let dataStore = new DataStore()
-    dataStore.fetchData(url, FLAG_STORAGE.popular) // async action and data flow
+    dataStore.fetchData(url, FLAG_STORAGE.trending) // async action and data flow
         .then(data => {
-          handleData(Types.POPULAR_REFRESH_SUCCESS, storeName, data, pageSize)
+          handleData(Types.TRENDING_REFRESH_SUCCESS, dispatch, storeName, data, pageSize)
         })
         .catch(error => {
           console.log(error)
@@ -48,18 +48,4 @@ export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = []
       }
     }, 1000)
   }
-}
-
-const handleData = (dispatch, storeName, data, pageSize) => {
-  let fixItems = []
-  if (data && data.data && data.data.items) {
-    fixItems = data.data.items
-  }
-  dispatch({
-    type: Types.POPULAR_REFRESH_SUCCESS,
-    items: fixItems,
-    projectModes: pageSize > fixItems.length ? fixItems : fixItems.slice(0, pageSize),
-    storeName,
-    pageIndex : 1
-  })
 }

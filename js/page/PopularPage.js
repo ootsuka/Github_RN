@@ -11,13 +11,15 @@ import {FlatList, StyleSheet, Text, View, Button, RefreshControl,Image, Activity
 import {createMaterialTopTabNavigator, createAppContainer} from 'react-navigation'
 import {connect} from 'react-redux'
 import Toast from 'react-native-easy-toast'
+
 import NavigationUtil from '../navigator/NavigationUtil'
+import NavigationBar from '../common/NavigationBar'
 import actions from '../action/index'
 import PopularItem from '../common/PopularItem'
 
 const URL = 'https://api.github.com/search/repositories?q='
 const QUERY_STR = '&sort=stars'
-const THEME_COLOR = 'red'
+const THEME_COLOR = '#678'
 
 type Props = {};
 export default class PopularPage extends Component<Props> {
@@ -40,6 +42,15 @@ export default class PopularPage extends Component<Props> {
   }
 
   render() {
+    let statusBar = {
+      backgroundColor: THEME_COLOR,
+      barStyle: 'light-content'
+    }
+    let navigationBar = <NavigationBar
+      title={'popular'}
+      statusBar={statusBar}
+      style={{backgroundColor: THEME_COLOR}}
+      />
     const TabNavigator = createAppContainer(createMaterialTopTabNavigator(
       this._genTabs(), {
         tabBarOptions: {
@@ -56,6 +67,7 @@ export default class PopularPage extends Component<Props> {
     ))
     return (
       <View style={{flex: 1, marginTop: 30}}>
+        {navigationBar}
         <TabNavigator/>
       </View>
     );
