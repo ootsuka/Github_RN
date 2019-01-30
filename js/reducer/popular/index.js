@@ -4,7 +4,7 @@ const defaultState = {}
 
 export default function onAction(state = defaultState, action) {
   switch (action.type) {
-    case Types.LOAD_POPULAR_SUCCESS:
+    case Types.POPULAR_REFRESH_SUCCESS:
       return {
         ...state,
         [action.storeName]: {
@@ -21,10 +21,11 @@ export default function onAction(state = defaultState, action) {
          ...state,
          [action.storeName]: {
            ...state[action.storeName],
-           isLoading: true
+           isLoading: true,
+           hideLoadingMore: true
          }
        }
-    case Types.LOAD_POPULAR_FAIL:
+    case Types.POPULAR_REFRESH_FAIL:
        return {
          ...state,
          [action.storeName]: {

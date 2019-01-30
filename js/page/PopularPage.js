@@ -80,7 +80,8 @@ class PopularTab extends Component<Props> {
     const url = this.genFetchUrl(this.storeName)
     const store = this._store()
     if (loadMore) {
-      onLoadMorePopular(storeName, ++store.pageIndex, pageSize, store.items, callBack => {
+      console.log('loadmore called')
+      onLoadMorePopular(this.storeName, ++store.pageIndex, pageSize, store.items, callBack => {
         this.refs.toast.show('no more')
       })
     } else {
@@ -126,7 +127,7 @@ class PopularTab extends Component<Props> {
   }
 
   render() {
-    const { tabLabel } = this.props
+    const { popular } = this.props
     let store = this._store()
     return (
       <View style={styles.container}>
@@ -145,10 +146,18 @@ class PopularTab extends Component<Props> {
               />
           }
           ListFooterComponent={() => this.getIndicator()}
-          OnEndReached={() => {
-            this.loadData(true)//load more data is true
+          onEndReached={() => {
+            setTimeout(() => {
+              if (this.canLoadMore) {
+                this.loadData(true)
+                this.canLoadMore = false
+              }
+            }, 100)
           }}
-          OnEndReachedThreshold={0.5}
+          onEndReachedThreshold={0.5}
+          onMomentumScrollBegin={() => {
+            this.canLoadMore = true
+          }}
           />
         <Toast
           ref={'toast'}
@@ -165,8 +174,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     onLoadPopularData: (storeName, url, pageSize) => dispatch(actions.onLoadPopularData(storeName, url, pageSize)),
-    onLoadMorePopular: (storeName, pageIndex, pageSize, items, callBack) => dispatch(actions.onLoadMorePopular(
-      storeName, pageIndex, pageSize, items, callBack
+    onLoadMorePopular: (storeName, pageIndex, pageSize, projectModes, callBack) => dispatch(actions.onLoadMorePopular(
+      storeName, pageIndex, pageSize, projectModes, callBack
     ))
 })
 

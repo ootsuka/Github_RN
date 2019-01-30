@@ -15,7 +15,7 @@ export function onLoadPopularData(storeName, url, pageSize) {
         .catch(error => {
           console.log(error)
           dispatch({
-            type: Types.LOAD_POPULAR_FAIL,
+            type: Types.POPULAR_REFRESH_FAIL,
             storeName,
             error
           })
@@ -25,13 +25,13 @@ export function onLoadPopularData(storeName, url, pageSize) {
 
 export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = [], callBack) {
   return dispatch => {
-    setTimeOut(() => {
+    setTimeout(() => {
       if ((pageIndex - 1) * pageSize >= dataArray.length) {//already load all data
-        if (tyoeOf(callBack) === 'function') {
+        if (typeof(callBack) === 'function') {
           callBack('no more')
         }
         dispatch({
-          types: Types.LOAD_POPULAR_MORE_FAIL,
+          type: Types.LOAD_POPULAR_MORE_FAIL,
           error: 'no more',
           storeName: storeName,
           pageIndex: --pageIndex,
@@ -40,7 +40,7 @@ export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = []
       } else {
         let max = pageSize * pageIndex > dataArray.length ? dataArray.length : pageSize * pageIndex
         dispatch({
-          types: Types.LOAD_POPULAR_MORE_SUCCESS,
+          type: Types.LOAD_POPULAR_MORE_SUCCESS,
           storeName,
           pageIndex,
           projectModes: dataArray.slice(0, max)
@@ -56,7 +56,8 @@ const handleData = (dispatch, storeName, data, pageSize) => {
     fixItems = data.data.items
   }
   dispatch({
-    type: Types.LOAD_POPULAR_SUCCESS,
+    type: Types.POPULAR_REFRESH_SUCCESS,
+    items: fixItems,
     projectModes: pageSize > fixItems.length ? fixItems : fixItems.slice(0, pageSize),
     storeName,
     pageIndex : 1
