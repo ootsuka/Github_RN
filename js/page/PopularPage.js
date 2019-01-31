@@ -1,13 +1,5 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, {Component} from 'react';
-import {FlatList, StyleSheet, Text, View, Button, RefreshControl,Image, ActivityIndicator} from 'react-native';
+import {FlatList, StyleSheet, Text, View, Button, RefreshControl,Image, ActivityIndicator, DeviceInfo} from 'react-native';
 import {createMaterialTopTabNavigator, createAppContainer} from 'react-navigation'
 import {connect} from 'react-redux'
 import Toast from 'react-native-easy-toast'
@@ -66,7 +58,7 @@ export default class PopularPage extends Component<Props> {
       }
     ))
     return (
-      <View style={{flex: 1, marginTop: 30}}>
+      <View style={{flex: 1, marginTop: DeviceInfo.isIphoneX_deprecated ? 30 : 0}}>
         {navigationBar}
         <TabNavigator/>
       </View>

@@ -6,7 +6,6 @@ export const FLAG_STORAGE = {
   flag_trending: 'trending'
 }
 export default class DataStore {
-
   fetchData(url, flag) {
     return new Promise((resolve, reject) => {
       this.fetchLocalData(url).then((wrapData) => {
@@ -61,7 +60,7 @@ export default class DataStore {
 
   fetchNetData(url, flag) {
     return new Promise((resolve, reject) => {
-      if (flag !== FLAG_STORAGE.trending){
+      if (flag !== FLAG_STORAGE.flag_trending){
         fetch(url)
             .then((response) => {
               if (response.ok) {

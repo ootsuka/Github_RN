@@ -1,10 +1,15 @@
 export const handleData = (actionType, dispatch, storeName, data, pageSize) => {
   let fixItems = []
-  if (data && data.data && data.data.items) {
-    fixItems = data.data.items
+  if (data && data.data) {
+    if (Array.isArray(data.data)) {
+      fixItems = data.data
+    } else if (Array.isArray(data.data.items)) {
+      fixItems = data.data.items
+    }
+
   }
   dispatch({
-    type: Types.POPULAR_REFRESH_SUCCESS,
+    type: actionType,
     items: fixItems,
     projectModes: pageSize > fixItems.length ? fixItems : fixItems.slice(0, pageSize),
     storeName,
