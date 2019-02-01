@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {FlatList, StyleSheet, Text, View, Button, RefreshControl,Image, ActivityIndicator, DeviceInfo} from 'react-native';
+import {FlatList, StyleSheet, Text, View, Button, RefreshControl,Image,
+  ActivityIndicator, DeviceInfo} from 'react-native';
 import {createMaterialTopTabNavigator, createAppContainer} from 'react-navigation'
 import {connect} from 'react-redux'
 import Toast from 'react-native-easy-toast'
