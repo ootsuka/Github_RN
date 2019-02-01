@@ -59,7 +59,7 @@ export default class PopularPage extends Component<Props> {
       }
     ))
     return (
-      <View style={{flex: 1, marginTop: DeviceInfo.isIphoneX_deprecated ? 30 : 0}}>
+      <View style={{flex: 1, marginTop: DeviceInfo.isIPhoneX_deprecated ? 30 : 0}}>
         {navigationBar}
         <TabNavigator/>
       </View>
@@ -103,7 +103,11 @@ class PopularTab extends Component<Props> {
     const item = data.item
     return <PopularItem
       item={item}
-      onSelect={() => {}}
+      onSelect={() => {
+        NavigationUtil.goPage({
+          projectModel: item
+        }, 'DetailPage')
+      }}
       />
   }
 
