@@ -10,7 +10,7 @@ export default function onAction(state = defaultState, action) {
         [action.storeName]: {
           ...state[action.storeName],
           items: action.items, // original data
-          projectModes: action.projectModes, //data to show this round
+          projectModels: action.projectModels, //data to show this round
           isLoading: false,
           hideLoadingMore: false,
           pageIndex: action.pageIndex
@@ -38,7 +38,7 @@ export default function onAction(state = defaultState, action) {
         ...state,
         [action.storeName]: {
           ...state[action.storeName],
-          projectModes: action.projectModes,
+          projectModels: action.projectModels,
           hideLoadingMore: false,
           pageIndex: action.pageIndex
         }

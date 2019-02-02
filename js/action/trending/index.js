@@ -1,8 +1,8 @@
 import Types from '../types'
 import DataStore, {FLAG_STORAGE} from '../../expand/dao/DataStore'
-import {handleData} from '../ActionUtil'
+import {handleData, _projectModels} from '../ActionUtil'
 
-export function onRefreshTrending(storeName, url, pageSize) {
+export function onRefreshTrending(storeName, url, pageSize, favoriteDao) {
   return dispatch => {
     dispatch({
       type: Types.TRENDING_REFRESH,
@@ -11,7 +11,7 @@ export function onRefreshTrending(storeName, url, pageSize) {
     let dataStore = new DataStore()
     dataStore.fetchData(url, FLAG_STORAGE.flag_trending) // async action and data flow
         .then(data => {
-          handleData(Types.TRENDING_REFRESH_SUCCESS, dispatch, storeName, data, pageSize)
+          handleData(Types.TRENDING_REFRESH_SUCCESS, dispatch, storeName, data, pageSize, favoriteDao)
         })
         .catch(error => {
           console.log(error)
@@ -24,7 +24,7 @@ export function onRefreshTrending(storeName, url, pageSize) {
   }
 }
 
-export function onLoadMoreTrending(storeName, pageIndex, pageSize, dataArray = [], callBack) {
+export function onLoadMoreTrending(storeName, pageIndex, pageSize, dataArray = [], favoriteDao, callBack) {
   return dispatch => {
     setTimeout(() => {
       if ((pageIndex - 1) * pageSize >= dataArray.length) {//already load all data
@@ -36,16 +36,17 @@ export function onLoadMoreTrending(storeName, pageIndex, pageSize, dataArray = [
           error: 'no more',
           storeName: storeName,
           pageIndex: --pageIndex,
-          projectModes: dataArray
         })
       } else {
         let max = pageSize * pageIndex > dataArray.length ? dataArray.length : pageSize * pageIndex
-        dispatch({
-          type: Types.TRENDING_LOAD_MORE_SUCCESS,
-          storeName,
-          pageIndex,
-          projectModes: dataArray.slice(0, max)
-        })
+        _projectModels(dataArray.slice(0, max), favoriteDao, data => {
+          dispatch({
+            type: Types.TRENDING_LOAD_MORE_SUCCESS,
+            storeName,
+            pageIndex,
+            projectModels: data
+          })
+        })  
       }
     }, 1000)
   }

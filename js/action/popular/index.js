@@ -1,8 +1,9 @@
 import Types from '../types'
 import DataStore, {FLAG_STORAGE} from '../../expand/dao/DataStore'
-import {handleData} from '../ActionUtil'
+import {handleData, _projectModels} from '../ActionUtil'
+import FavoriteDao from '../../expand/dao/FavoriteDao'
 
-export function onLoadPopularData(storeName, url, pageSize) {
+export function onRefreshPopular(storeName, url, pageSize, favoriteDao) {
   return dispatch => {
     dispatch({
       type: Types.POPULAR_REFRESH,
@@ -11,7 +12,8 @@ export function onLoadPopularData(storeName, url, pageSize) {
     let dataStore = new DataStore()
     dataStore.fetchData(url, FLAG_STORAGE.popular) // async action and data flow
         .then(data => {
-          handleData(Types.POPULAR_REFRESH_SUCCESS, dispatch, storeName, data, pageSize)
+          handleData(Types.POPULAR_REFRESH_SUCCESS, dispatch, storeName, data, pageSize,
+          favoriteDao)
         })
         .catch(error => {
           console.log(error)
@@ -24,7 +26,7 @@ export function onLoadPopularData(storeName, url, pageSize) {
   }
 }
 
-export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = [], callBack) {
+export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = [], favoriteDao, callBack) {
   return dispatch => {
     setTimeout(() => {
       if ((pageIndex - 1) * pageSize >= dataArray.length) {//already load all data
@@ -36,16 +38,18 @@ export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = []
           error: 'no more',
           storeName: storeName,
           pageIndex: --pageIndex,
-          projectModes: dataArray
         })
       } else {
         let max = pageSize * pageIndex > dataArray.length ? dataArray.length : pageSize * pageIndex
-        dispatch({
-          type: Types.LOAD_POPULAR_MORE_SUCCESS,
-          storeName,
-          pageIndex,
-          projectModes: dataArray.slice(0, max)
+        _projectModels(dataArray.slice(0, max), favoriteDao, data => {
+          dispatch({
+            type: Types.LOAD_POPULAR_MORE_SUCCESS,
+            storeName,
+            pageIndex,
+            projectModels: data
+          })
         })
+
       }
     }, 1000)
   }
