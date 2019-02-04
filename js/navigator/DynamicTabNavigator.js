@@ -13,7 +13,9 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import {BottomTabBar} from 'react-navigation-tabs'
 import { connect } from 'react-redux'
+import EventBus from 'react-native-event-bus'
 
+import EventTypes from '../util/EventTypes'
 import PopularPage from '../page/PopularPage'
 import TrendingPage from '../page/TrendingPage'
 import FavoritePage from '../page/FavoritePage'
@@ -96,7 +98,14 @@ class DynamicTabNavigator extends Component<Props> {
   }
   render() {
     const Tab = this._tabNavigator()
-    return <Tab />
+    return <Tab
+      onNavigationStateChange={(prevState, newState, action) => {
+        EventBus.getInstance().fireEvent(EventTypes.bottom_tab_select, {
+          from : prevState.index,
+          to: newState.index
+        })
+      }}
+      />
   }
 }
 

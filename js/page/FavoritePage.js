@@ -4,6 +4,7 @@ import {FlatList, StyleSheet, Text, View, Button, RefreshControl,Image,
 import {createMaterialTopTabNavigator, createAppContainer} from 'react-navigation'
 import {connect} from 'react-redux'
 import Toast from 'react-native-easy-toast'
+import EventBus from 'react-native-event-bus'
 
 import NavigationUtil from '../navigator/NavigationUtil'
 import NavigationBar from '../common/NavigationBar'
@@ -13,6 +14,8 @@ import TrendingItem from '../common/TrendingItem'
 import FavoriteDao from '../expand/dao/FavoriteDao'
 import {FLAG_STORAGE} from '../expand/dao/DataStore'
 import FavoriteUtil from '../util/FavoriteUtil'
+import EventTypes from '../util/EventTypes'
+
 
 const URL = 'https://api.github.com/search/repositories?q='
 const QUERY_STR = '&sort=stars'
@@ -53,7 +56,6 @@ export default class FavoritePage extends Component<Props> {
         tabBarOptions: {
           tabStyle: styles.tabStyle,
           upperCaseLabel: false,
-          scrollEnabled: true,
           style: {
             backgroundColor: '#678'
           },
@@ -83,6 +85,15 @@ class FavoriteTab extends Component<Props> {
 
   componentDidMount() {
     this.loadData()
+    EventBus.getInstance().addListener(EventTypes.bottom_tab_select, this.listener = data => {
+      if (data.to === 2) {
+        this.loadData(false)
+      }
+    })
+  }
+
+  componentWillUnmount() {
+    EventBus.getInstance().removeListener(this.listener)
   }
 
   loadData(isShowLoading) {
@@ -171,14 +182,8 @@ const mapDispatchToProps = (dispatch) => ({
 const FavoriteTabPage = connect(mapStateToProps, mapDispatchToProps)(FavoriteTab)
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
   tabStyle: {
-    minWidth: 50
+    minWidth: 100
   },
   indicatorStyle: {
     height: 2,

@@ -6,10 +6,12 @@ import ProjectModel from '../../model/ProjectModel'
 
 export function onLoadFavoriteData(flag, isShowLoading) {
   return dispatch => {
-    dispatch({
-      type: Types.FAVORITE_LOAD_DATA,
-      storeName: flag
-    })
+    if (isShowLoading) {
+      dispatch({
+        type: Types.FAVORITE_LOAD_DATA,
+        storeName: flag
+      })
+    }
     new FavoriteDao(flag).getAllItems()
         .then(items => {
           let resultData = []
