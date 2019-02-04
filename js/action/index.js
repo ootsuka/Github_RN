@@ -1,7 +1,7 @@
 
 import { onThemeChange } from './theme/index'
-import { onRefreshPopular, onLoadMorePopular } from './popular/index'
-import { onRefreshTrending, onLoadMoreTrending } from './trending/index'
+import { onRefreshPopular, onLoadMorePopular, onFlushPopularFavorite } from './popular/index'
+import { onRefreshTrending, onLoadMoreTrending, onFlushTrendingFavorite } from './trending/index'
 import { onLoadFavoriteData } from './favorite/index'
 
 export default actions = {
@@ -11,4 +11,6 @@ export default actions = {
   onRefreshTrending,
   onLoadMoreTrending,
   onLoadFavoriteData,
+  onFlushPopularFavorite,
+  onFlushTrendingFavorite,
 }

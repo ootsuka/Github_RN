@@ -4,6 +4,7 @@ import {FlatList, StyleSheet, Text, View, Button, RefreshControl,Image,
 import {createMaterialTopTabNavigator, createAppContainer} from 'react-navigation'
 import {connect} from 'react-redux'
 import Toast from 'react-native-easy-toast'
+import EventBus from 'react-native-event-bus'
 
 import NavigationUtil from '../navigator/NavigationUtil'
 import NavigationBar from '../common/NavigationBar'
@@ -12,6 +13,7 @@ import PopularItem from '../common/PopularItem'
 import FavoriteDao from '../expand/dao/FavoriteDao'
 import {FLAG_STORAGE} from '../expand/dao/DataStore'
 import FavoriteUtil from '../util/FavoriteUtil'
+import EventTypes from '../util/EventTypes'
 
 const URL = 'https://api.github.com/search/repositories?q='
 const QUERY_STR = '&sort=stars'
@@ -78,21 +80,35 @@ class PopularTab extends Component<Props> {
     super(props)
     const {tabLabel} = this.props
     this.storeName = tabLabel
+    this.isFavoriteChanged = false
   }
 
   componentDidMount() {
     this.loadData()
+    EventBus.getInstance().addListener(EventTypes.favorite_changed_popular, this.favoriteChangedListener = () => {
+      this.isFavoriteChanged = true
+    })
+    EventBus.getInstance().addListener(EventTypes.bottom_tab_select, this.listener = data => {
+      if (data.to === 0 && this.isFavoriteChanged) {
+        this.loadData(null, true)
+      }
+    })
   }
 
-  loadData(loadMore) {
-    const {onRefreshPopular, onLoadMorePopular} = this.props
+  componentWillUnmount() {
+    EventBus.getInstance().removeListener(this.listener)
+  }
+
+  loadData(loadMore, refreshFavorite) {
+    const {onRefreshPopular, onLoadMorePopular, onFlushPopularFavorite } = this.props
     const url = this.genFetchUrl(this.storeName)
     const store = this._store()
     if (loadMore) {
-      console.log('loadmore called')
       onLoadMorePopular(this.storeName, ++store.pageIndex, pageSize, store.items, favoriteDao, callBack => {
         this.refs.toast.show('no more')
       })
+    } else if (refreshFavorite) {
+      onFlushPopularFavorite(this.storeName, store.pageIndex, pageSize, store.items, favoriteDao)
     } else {
       onRefreshPopular(this.storeName, url, pageSize, favoriteDao)
     }
@@ -194,7 +210,10 @@ const mapDispatchToProps = (dispatch) => ({
     onRefreshPopular: (storeName, url, pageSize, favoriteDao) => dispatch(actions.onRefreshPopular(storeName, url, pageSize, favoriteDao)),
     onLoadMorePopular: (storeName, pageIndex, pageSize, projectModels, favoriteDao, callBack) => dispatch(actions.onLoadMorePopular(
       storeName, pageIndex, pageSize, projectModels, favoriteDao, callBack
-    ))
+    )),
+    onFlushPopularFavorite: (storeName, pageIndex, pageSize, projectModels, favoriteDao) => dispatch(actions.onFlushPopularFavorite(
+      storeName, pageIndex, pageSize, projectModels, favoriteDao
+    )),
 })
 
 const PopularTabPage = connect(mapStateToProps, mapDispatchToProps)(PopularTab)

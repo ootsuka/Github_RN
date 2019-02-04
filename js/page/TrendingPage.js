@@ -5,6 +5,7 @@ import {createMaterialTopTabNavigator, createAppContainer} from 'react-navigatio
 import {connect} from 'react-redux'
 import Toast from 'react-native-easy-toast'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import EventBus from 'react-native-event-bus'
 
 import NavigationUtil from '../navigator/NavigationUtil'
 import NavigationBar from '../common/NavigationBar'
@@ -14,12 +15,12 @@ import TrendingDialog, { TimeSpans } from '../common/TrendingDialog'
 import FavoriteDao from '../expand/dao/FavoriteDao'
 import FavoriteUtil from '../util/FavoriteUtil'
 import {FLAG_STORAGE} from '../expand/dao/DataStore'
+import EventTypes from '../util/EventTypes'
 
 const URL = 'https://github.com/trending/'
 const QUERY_STR = '&sort=stars'
 const THEME_COLOR = '#678'
 const EVENT_TYPE_TIME_SPAN_CHANGE= 'EVENT_TYPE_TIME_SPAN_CHANGE'
-const favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_trending)
 
 type Props = {};
 export default class TrendingPage extends Component<Props> {
@@ -133,6 +134,9 @@ class TrendingTab extends Component<Props> {
     const {tabLabel, timeSpan} = this.props
     this.storeName = tabLabel
     this.timeSpan = timeSpan
+    this.isFavoriteChanged = false
+    this.favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_trending)
+
   }
 
   componentDidMount() {
@@ -140,6 +144,14 @@ class TrendingTab extends Component<Props> {
     this.timeSpanChangeListener = DeviceEventEmitter.addListener(EVENT_TYPE_TIME_SPAN_CHANGE, (timeSpan) => {
       this.timeSpan = timeSpan
       this.loadData()
+    })
+    EventBus.getInstance().addListener(EventTypes.favorite_changed_trending, this.favoriteChangedListener = () => {
+      this.isFavoriteChanged = true
+    })
+    EventBus.getInstance().addListener(EventTypes.bottom_tab_select, this.listener = data => {
+      if (data.to === 1 && this.isFavoriteChanged) {
+        this.loadData(null, true)
+      }
     })
   }
 
@@ -149,16 +161,18 @@ class TrendingTab extends Component<Props> {
     }
   }
 
-  loadData(loadMore) {
-    const {onRefreshTrending, onLoadMoreTrending} = this.props
+  loadData(loadMore, refreshFavorite) {
+    const {onRefreshTrending, onLoadMoreTrending, onFlushTrendingFavorite} = this.props
     const url = this.genFetchUrl(this.storeName)
     const store = this._store()
     if (loadMore) {
-      onLoadMoreTrending(this.storeName, ++store.pageIndex, pageSize, store.items, favoriteDao, callBack => {
+      onLoadMoreTrending(this.storeName, ++store.pageIndex, pageSize, store.items, this.favoriteDao, callBack => {
         this.refs.toast.show('no more')
       })
+    } else if (refreshFavorite) {
+      onFlushTrendingFavorite(this.storeName, store.pageIndex, pageSize, store.items, this.favoriteDao)
     } else {
-      onRefreshTrending(this.storeName, url, pageSize, favoriteDao)
+      onRefreshTrending(this.storeName, url, pageSize, this.favoriteDao)
     }
 
   }
@@ -179,7 +193,7 @@ class TrendingTab extends Component<Props> {
         }, 'DetailPage')
       }}
       onFavorite={(item, isFavorite) => FavoriteUtil.onFavorite(
-        favoriteDao, item,
+        this.favoriteDao, item,
         isFavorite, FLAG_STORAGE.flag_trending)}
       />
   }
@@ -216,7 +230,7 @@ class TrendingTab extends Component<Props> {
         <FlatList
           data={store.projectModels}
           renderItem={data => this.renderItem(data)}
-          keyExtractor={item =>"" + item.fullName}
+          keyExtractor={item =>"" + item.item.fullName}
           refreshControl={
             <RefreshControl
               title={'Loading'}
@@ -258,6 +272,9 @@ const mapDispatchToProps = (dispatch) => ({
     onRefreshTrending: (storeName, url, pageSize, favoriteDao) => dispatch(actions.onRefreshTrending(storeName, url, pageSize, favoriteDao)),
     onLoadMoreTrending: (storeName, pageIndex, pageSize, projectModels, favoriteDao, callBack) => dispatch(actions.onLoadMoreTrending(
       storeName, pageIndex, pageSize, projectModels, favoriteDao, callBack
+    )),
+    onFlushTrendingFavorite: (storeName, pageIndex, pageSize, projectModels, favoriteDao) => dispatch(actions.onFlushTrendingFavorite(
+      storeName, pageIndex, pageSize, projectModels, favoriteDao
     ))
 })
 

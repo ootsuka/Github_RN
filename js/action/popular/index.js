@@ -54,3 +54,17 @@ export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = []
     }, 1000)
   }
 }
+
+export function onFlushPopularFavorite(storeName, pageIndex, pageSize, dataArray = [], favoriteDao) {
+  return dispatch => {
+    let max = pageSize * pageIndex > dataArray.length ? dataArray.length : pageSize * pageIndex
+    _projectModels(dataArray.slice(0, max), favoriteDao, data => {
+      dispatch({
+        type: Types.FLUSH_POPULAR_FAVORITE,
+        storeName,
+        pageIndex,
+        projectModels: data
+      })
+    })
+  }
+}

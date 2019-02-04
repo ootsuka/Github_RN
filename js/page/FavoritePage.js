@@ -20,7 +20,7 @@ import EventTypes from '../util/EventTypes'
 const URL = 'https://api.github.com/search/repositories?q='
 const QUERY_STR = '&sort=stars'
 const THEME_COLOR = '#678'
-const favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_popular)
+
 
 type Props = {};
 export default class FavoritePage extends Component<Props> {
@@ -101,6 +101,17 @@ class FavoriteTab extends Component<Props> {
     onLoadFavoriteData(this.storeName, isShowLoading)
   }
 
+  onFavorite(item, isFavorite) {
+    FavoriteUtil.onFavorite(
+      this.favoriteDao, item,
+      isFavorite, this.storeName)
+      if (this.storeName === FLAG_STORAGE.flag_popular) {
+        EventBus.getInstance().fireEvent(EventTypes.favorite_changed_popular)
+      } else {
+        EventBus.getInstance().fireEvent(EventTypes.favorite_changed_trending)
+      }
+  }
+
   renderItem(data) {
     const item = data.item
     const Item = this.storeName === FLAG_STORAGE.flag_popular ? PopularItem : TrendingItem
@@ -113,9 +124,8 @@ class FavoriteTab extends Component<Props> {
           callback
         }, 'DetailPage')
       }}
-      onFavorite={(item, isFavorite) => FavoriteUtil.onFavorite(
-        favoriteDao, item,
-        isFavorite, this.storeName)}
+      onFavorite={(item, isFavorite) => this.onFavorite(item,
+      )}
       />
   }
 

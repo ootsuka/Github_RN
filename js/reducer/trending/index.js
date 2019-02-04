@@ -52,6 +52,14 @@ export default function onAction(state = defaultState, action) {
           pageIndex: action.pageIndex
         }
       }
+    case Types.FLUSH_TRENDING_FAVORITE:
+      return {
+        ...state,
+        [action.storeName]: {
+          ...state[action.storeName],
+          projectModels: action.projectModels
+        }
+      }
     default:
     return state
   }
