@@ -16,6 +16,7 @@ import actions from '../action/index'
 import NavigationBar from '../common/NavigationBar'
 import {MORE_MENU} from '../common/MORE_MENU'
 import GlobalStyles from '../res/GlobalStyles'
+import ViewUtil from '../util/ViewUtil'
 
 const THEME_COLOR = '#678'
 
@@ -53,6 +54,9 @@ class MyPage extends Component<Props> {
         style={{color: 'white'}}
         />
     </TouchableOpacity>
+  }
+  getItem(menu) {
+    return ViewUtil.getMenuItem(() => this.onClick(menu), menu, THEME_COLOR)
   }
   render() {
     let statusBar = {
@@ -97,9 +101,26 @@ class MyPage extends Component<Props> {
                 color: THEME_COLOR
               }}/>
           </TouchableOpacity>
-          <View
-            style={GlobalStyles.line}
-            />
+          <View style={GlobalStyles.line} />
+          {this.getItem(MORE_MENU.Tutorial)}
+          <Text style={styles.groupTitle}>Trending Management</Text>
+          {this.getItem(MORE_MENU.Custom_Language)}
+          <View style={GlobalStyles.line} />
+          {this.getItem(MORE_MENU.Sort_Language)}
+          <View style={GlobalStyles.line} />
+          <Text style={styles.groupTitle}>Popular Management</Text>
+          {this.getItem(MORE_MENU.Custom_Key)}
+          <View style={GlobalStyles.line} />
+          {this.getItem(MORE_MENU.Sort_Key)}
+          <View style={GlobalStyles.line} />
+          {this.getItem(MORE_MENU.Remove_Key)}
+          <View style={GlobalStyles.line} />
+          <Text style={styles.groupTitle}>Setting</Text>
+          {this.getItem(MORE_MENU.Custom_Theme)}
+          <View style={GlobalStyles.line} />
+          {this.getItem(MORE_MENU.About_Author)}
+          <View style={GlobalStyles.line} />
+          {this.getItem(MORE_MENU.Feedback)}
         </ScrollView>
       </View>
     );
@@ -122,6 +143,13 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: 'space-between',
     flexDirection: 'row'
+  },
+  groupTitle: {
+    marginLeft: 10,
+    marginBottom: 5,
+    marginTop: 10,
+    fontSize: 12,
+    color: 'gray'
   }
 });
 

@@ -6,7 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 export const MORE_MENU = {
   Custom_Language: {
     name: 'Custom Language',
-    Icons: Octicons,
+    Icons: Ionicons,
     icon: 'md-checkbox-outline'
   },
   Sort_Language: {
