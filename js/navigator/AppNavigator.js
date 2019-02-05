@@ -11,6 +11,7 @@ import WelcomePage from '../page/WelcomePage'
 import HomePage from '../page/HomePage'
 import DetailPage from '../page/DetailPage'
 import DataStoreDemoPage from '../page/DataStoreDemoPage'
+import WebViewPage from '../page/WebViewPage'
 
 export const rootCom = 'Init'
 
@@ -36,8 +37,8 @@ const MainNavigator = createStackNavigator({
       header: null
     }
   },
-  DataStoreDemoPage: {
-    screen: DataStoreDemoPage,
+  WebViewPage: {
+    screen: WebViewPage,
     navigationOptions: {
       header: null
     }

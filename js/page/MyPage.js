@@ -17,13 +17,24 @@ import NavigationBar from '../common/NavigationBar'
 import {MORE_MENU} from '../common/MORE_MENU'
 import GlobalStyles from '../res/GlobalStyles'
 import ViewUtil from '../util/ViewUtil'
+import NavigationUtil from '../navigator/NavigationUtil'
 
 const THEME_COLOR = '#678'
 
 type Props = {};
 class MyPage extends Component<Props> {
   onClick(menu) {
-
+    let RouteName, params = {}
+    switch (menu) {
+      case MORE_MENU.Tutorial:
+      RouteName = 'WebViewPage'
+      params.title = 'Tutorial'
+      params.url = 'https://coding.m.imooc.com/classindex.html?cid=89'
+        break;
+    }
+    if (RouteName) {
+      NavigationUtil.goPage(params, RouteName)
+    }
   }
   getRightButton() {
     return <View style={{flexDirection: 'row'}}>
