@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.6)',
     flex: 1,
     alignItems: 'center',
-    paddingTop: DeviceInfo.isIphoneX_deprecated ? 30 : 0
+    paddingTop: DeviceInfo.isIPhoneX_deprecated ? 30 : 0
   },
   arrow: {
     marginTop: 40,
