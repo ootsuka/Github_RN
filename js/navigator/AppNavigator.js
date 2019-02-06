@@ -12,6 +12,7 @@ import HomePage from '../page/HomePage'
 import DetailPage from '../page/DetailPage'
 import DataStoreDemoPage from '../page/DataStoreDemoPage'
 import WebViewPage from '../page/WebViewPage'
+import AboutPage from '../page/about/AboutPage'
 
 export const rootCom = 'Init'
 
@@ -42,7 +43,13 @@ const MainNavigator = createStackNavigator({
     navigationOptions: {
       header: null
     }
-  }
+  },
+  AboutPage: {
+    screen: AboutPage,
+    navigationOptions: {
+      header: null
+    }
+  },
 })
 
 const SwitchNavigator = createSwitchNavigator({

@@ -30,7 +30,10 @@ class MyPage extends Component<Props> {
       RouteName = 'WebViewPage'
       params.title = 'Tutorial'
       params.url = 'https://coding.m.imooc.com/classindex.html?cid=89'
-        break;
+      break
+      case MORE_MENU.About:
+      RouteName = 'AboutPage'
+      break
     }
     if (RouteName) {
       NavigationUtil.goPage(params, RouteName)
