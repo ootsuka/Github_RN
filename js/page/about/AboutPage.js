@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {ScrollView, Button, StyleSheet, Text, View, TouchableOpacity, DeviceInfo} from 'react-native'
+import {ScrollView, Button, StyleSheet, Text, View, TouchableOpacity, DeviceInfo, Linking} from 'react-native'
 import { connect } from 'react-redux'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
@@ -22,7 +22,7 @@ export default class AboutPage extends Component<Props> {
     this.aboutCommon = new AboutCommon({
       ...this.params,
       navigation: this.props.navigation,
-      flagAbout: FLAG_ABOUT.flag_about_me
+      flagAbout: FLAG_ABOUT.flag_about
     }, data => this.setState({...data}))
     this.state = {
       data: config
@@ -35,7 +35,25 @@ export default class AboutPage extends Component<Props> {
       RouteName = 'WebViewPage'
       params.title = 'Tutorial'
       params.url = 'https://coding.m.imooc.com/classindex.html?cid=89'
-        break;
+        break
+      case MORE_MENU.Feedback:
+        const url = 'mailto://shenx008@gmail.com'
+        Linking.canOpenURL(url).then(support => {
+          if (!support) {
+            console.log('cannot handle url: ' + url)
+          } else {
+            Linking.openURL(url)
+          }
+        }).catch(e => {
+          console.error('an error occured ' + e)
+        })
+        break
+      case MORE_MENU.About_Author:
+        RouteName = 'AboutMePage'
+
+        break
+
+
     }
     if (RouteName) {
       NavigationUtil.goPage(params, RouteName)

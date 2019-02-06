@@ -34,41 +34,15 @@ class MyPage extends Component<Props> {
       case MORE_MENU.About:
       RouteName = 'AboutPage'
       break
+      case MORE_MENU.About_Author:
+      RouteName = 'AboutMePage'
+      break
     }
     if (RouteName) {
       NavigationUtil.goPage(params, RouteName)
     }
   }
-  getRightButton() {
-    return <View style={{flexDirection: 'row'}}>
-      <TouchableOpacity
-        onPress={() => {
 
-        }}
-        >
-        <View style={{padding:5, marginRight: 8}}>
-          <Feather
-            name={'search'}
-            size={24}
-            style={{color: 'white'}}
-            />
-        </View>
-      </TouchableOpacity>
-    </View>
-  }
-
-  getLeftButton(callBack) {
-    return <TouchableOpacity
-      style={{padding: 8, paddingLeft: 12}}
-      onPress={callBack}
-      >
-      <Ionicons
-        name={'ios-arrow-back'}
-        size={26}
-        style={{color: 'white'}}
-        />
-    </TouchableOpacity>
-  }
   getItem(menu) {
     return ViewUtil.getMenuItem(() => this.onClick(menu), menu, THEME_COLOR)
   }
@@ -82,8 +56,6 @@ class MyPage extends Component<Props> {
         title={'My'}
         statusBar={statusBar}
         style={{backgroundColor: THEME_COLOR}}
-        rightButton={this.getRightButton()}
-        leftButton={this.getLeftButton()}
         />
 
     const { navigation } = this.props
