@@ -4,6 +4,7 @@ import theme from './theme'
 import popular from './popular/index'
 import trending from './trending/index'
 import favorite from './favorite/index'
+import language from './language/index'
 import { rootCom, RootNavigator } from '../navigator/AppNavigator'
 
 // assign default state
@@ -21,7 +22,8 @@ const index = combineReducers({
   theme: theme,
   popular: popular,
   trending: trending,
-  favorite: favorite
+  favorite: favorite,
+  language: language
 })
 
 export default index
