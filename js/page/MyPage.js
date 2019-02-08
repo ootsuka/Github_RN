@@ -18,6 +18,7 @@ import {MORE_MENU} from '../common/MORE_MENU'
 import GlobalStyles from '../res/GlobalStyles'
 import ViewUtil from '../util/ViewUtil'
 import NavigationUtil from '../navigator/NavigationUtil'
+import {FLAG_LANGUAGE} from '../expand/dao/LanguageDao'
 
 const THEME_COLOR = '#678'
 
@@ -36,6 +37,13 @@ class MyPage extends Component<Props> {
       break
       case MORE_MENU.About_Author:
       RouteName = 'AboutMePage'
+      break
+      case MORE_MENU.Custom_Key:
+      case MORE_MENU.Custom_Language:
+      case MORE_MENU.Remove_Key:
+      RouteName = 'CustomKeyPage'
+      params.isRemoveKey = menu === MORE_MENU.Remove_Key
+      params.flag = menu !== MORE_MENU.Custom_Language ? FLAG_LANGUAGE.flag_key : FLAG_LANGUAGE.flag_language
       break
     }
     if (RouteName) {
