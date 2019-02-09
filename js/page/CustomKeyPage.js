@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
-import {FlatList, StyleSheet, Text, View, Button, RefreshControl,Image,
-  ActivityIndicator, DeviceInfo, ScrollView, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet, Text, View, Button ,Image,
+  DeviceInfo, ScrollView, TouchableOpacity,
+  Alert,
+} from 'react-native';
 import {createMaterialTopTabNavigator, createAppContainer} from 'react-navigation'
 import {connect} from 'react-redux'
 import Toast from 'react-native-easy-toast'
@@ -19,6 +22,7 @@ import FavoriteUtil from '../util/FavoriteUtil'
 import ViewUtil from '../util/ViewUtil'
 import EventTypes from '../util/EventTypes'
 import LanguageDao from '../expand/dao/LanguageDao'
+import ArrayUtil from '../util/ArrayUtil'
 
 const URL = 'https://api.github.com/search/repositories?q='
 const QUERY_STR = '&sort=stars'
@@ -58,7 +62,13 @@ class CustomKeyPage extends Component<Props> {
     const {flag, isRemoveKey} = props.navigation.state.params
     let key = flag === FLAG_LANGUAGE.flag_key ? 'keys' : 'languages'
     if (isRemoveKey && !original) {
-
+      return state && state.keys && state.keys !== 0 && state.keys || props.languages[key].map(
+        val => {
+          return {
+          ...val,
+          checked: false
+        }
+      })
     } else {
       return props.languages[key]
     }
@@ -91,10 +101,40 @@ class CustomKeyPage extends Component<Props> {
     return tabs
   }
   onSave() {
-
+    if (this.changeValues.length === 0) {
+      NavigationUtil.goBack(this.props.navigation)
+      return
+    }
+    let keys;
+    if (this.isRemoveKey) {
+      for (let i = 0, l = this.changeValues.length; i < l; i++) {
+        ArrayUtil.remove(keys = CustomKeyPage._keys(this.props, true), this.changeValues[i], 'name')
+      }
+    }
+    this.languageDao.save(keys || this.state.keys)
+    const {onLoadLanguage} = this.props
+    onLoadLanguage(this.params.flag)
+    NavigationUtil.goBack(this.props.navigation)
   }
   onBack() {
-    NavigationUtil.goBack(this.props.navigation)
+    if (this.changeValues.length > 0) {
+      Alert.alert('reminder', 'do you want to save the change?',
+      [
+        {
+          text: 'No', onPress: () => {
+            NavigationUtil.goBack(this.props.navigation)
+          }
+        },
+        {
+          text: 'Yes', onPress: () => {
+            this.onSave()
+          }
+        }
+      ])
+    } else {
+      NavigationUtil.goBack(this.props.navigation)
+    }
+
   }
   renderView() {
     let dataArray = this.state.keys
@@ -115,7 +155,12 @@ class CustomKeyPage extends Component<Props> {
     return views
   }
   onClick(data, index) {
-
+    data.checked = !data.checked
+    ArrayUtil.updateArray(this.changeValues, data)
+    this.state.keys[index] = data
+    this.setState({
+      keys: this.state.keys
+    })
   }
   _checkedImage(checked) {
     const {theme} = this.params
@@ -131,7 +176,7 @@ class CustomKeyPage extends Component<Props> {
     return <CheckBox
     style={{flex: 1, padding: 10}}
     onClick={()=> this.onClick(data, index)}
-    isChecked={data.isChecked}
+    isChecked={data.checked}
     leftText={data.name}
     checkedImage={this._checkedImage(true)}
     unCheckedImage={this._checkedImage(false)}

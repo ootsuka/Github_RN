@@ -106,7 +106,8 @@ class TrendingPage extends Component<Props> {
             },
             indicatorStyle: styles.indicatorStyle,
             labelStyle: styles.labelStyle
-          }
+          },
+          lazy: true
         }
       ))
     }
