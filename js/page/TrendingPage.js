@@ -94,7 +94,7 @@ class TrendingPage extends Component<Props> {
   }
 
   _tabNav() {
-    if (!this.tabNav || ArrayUtil.isEqual(this.preKeys, this.props.keys)) {
+    if (!this.tabNav || !ArrayUtil.isEqual(this.preKeys, this.props.keys)) {
       this.tabNav= createAppContainer(createMaterialTopTabNavigator(
         this._genTabs(), {
           tabBarOptions: {
