@@ -7,6 +7,7 @@
  */
 
 import React, {Component} from 'react';
+import {connect} from 'react-redux'
 import { createBottomTabNavigator, createAppContainer} from 'react-navigation'
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -18,15 +19,40 @@ import FavoritePage from './FavoritePage'
 import MyPage from './MyPage'
 import NavigationUtil from '../navigator/NavigationUtil'
 import DynamicTabNavigator from '../navigator/DynamicTabNavigator'
-
+import CustomTheme from './CustomTheme'
+import actions from '../action/index'
 type Props = {};
 
-export default class HomePage extends Component<Props> {
+class HomePage extends Component<Props> {
+  renderCustomThemeView() {
+    const {customThemeViewVisible, onShowCustomThemeView} = this.props
+    return (
+      <CustomTheme
+        visible={customThemeViewVisible}
+        {...this.props}
+        onClose={() => onShowCustomThemeView(false)}
+      />
+    )
+  }
   render() {
     NavigationUtil.navigation = this.props.navigation
-    return <DynamicTabNavigator/>
+    return <View style={{flex: 1}}>
+      <DynamicTabNavigator/>
+      {this.renderCustomThemeView()}
+    </View>
   }
 }
+
+const mapStateToProps = state => ({
+  nav: state.nav,
+  customThemeViewVisible: state.theme.customThemeViewVisible
+})
+
+const mapDispatchToProps = dispatch => ({
+  onShowCustomThemeView: (show) => dispatch(actions.onShowCustomThemeView(show))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage)
 
 const styles = StyleSheet.create({
   container: {

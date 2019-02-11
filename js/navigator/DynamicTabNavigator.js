@@ -1,11 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, {Component} from 'react';
 import { createBottomTabNavigator, createAppContainer} from 'react-navigation'
 import {Platform, StyleSheet, Text, View} from 'react-native';
@@ -121,7 +113,7 @@ class TabBarComponent extends React.Component {
 
     return <BottomTabBar
            {...this.props}
-           activeTintColor = {this.props.theme}
+           activeTintColor = {this.props.theme.themeColor}
       />
   }
 }

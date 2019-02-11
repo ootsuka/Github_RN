@@ -7,7 +7,7 @@ import Feather from 'react-native-vector-icons/Feather'
 import Toast from 'react-native-easy-toast'
 
 import {MORE_MENU} from '../../common/MORE_MENU'
-import GlobalStyles from '../../res/GlobalStyles'
+import GlobalStyles from '../../res/styles/GlobalStyles'
 import ViewUtil from '../../util/ViewUtil'
 import NavigationUtil from '../../navigator/NavigationUtil'
 import {FLAG_ABOUT} from './AboutCommon'

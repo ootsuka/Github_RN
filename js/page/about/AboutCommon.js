@@ -2,7 +2,7 @@ import ParallaxScrollView from 'react-native-parallax-scroll-view'
 import React, {Component} from 'react'
 import {View, Text, Image, Dimensions, StyleSheet, Platform} from 'react-native'
 
-import GlobalStyles from '../../res/GlobalStyles'
+import GlobalStyles from '../../res/styles/GlobalStyles'
 import ViewUtil from '../../util/ViewUtil'
 import NavigationUtil from '../../navigator/NavigationUtil'
 
