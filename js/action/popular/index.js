@@ -10,7 +10,7 @@ export function onRefreshPopular(storeName, url, pageSize, favoriteDao) {
       storeName: storeName
     })
     let dataStore = new DataStore()
-    dataStore.fetchData(url, FLAG_STORAGE.popular) // async action and data flow
+    dataStore.fetchData(url, FLAG_STORAGE.flag_popular) // async action and data flow
         .then(data => {
           handleData(Types.POPULAR_REFRESH_SUCCESS, dispatch, storeName, data, pageSize,
           favoriteDao)

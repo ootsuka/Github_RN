@@ -35,9 +35,9 @@ export default class DetailPage extends Component<Props> {
     }
   }
   onFavoriteButtonClick() {
-    const {projectModel, callback} = this.params
+    const {projectModel, callBack} = this.params
     const isFavorite = projectModel.isFavorite = !projectModel.isFavorite
-    callback(isFavorite)
+    callBack(isFavorite)
     this.setState({
       isFavorite: isFavorite
     })

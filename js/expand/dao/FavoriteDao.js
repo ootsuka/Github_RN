@@ -9,9 +9,9 @@ export default class FavoriteDao {
   * favorite items, save favorite items
   * @param key item key
   * @param value
-  * @param callback
+  * @param callBack
   */
-  saveFavoriteItem(key, value, callback) {
+  saveFavoriteItem(key, value, callBack) {
     AsyncStorage.setItem(key, value, (error, result) => {
       if (!error) {
         this.updateFavoriteKeys(key, true)

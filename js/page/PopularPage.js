@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {FlatList, StyleSheet, Text, View, Button, RefreshControl,Image,
-  ActivityIndicator, DeviceInfo} from 'react-native';
+  ActivityIndicator, DeviceInfo, TouchableOpacity} from 'react-native';
 import {createMaterialTopTabNavigator, createAppContainer} from 'react-navigation'
 import {connect} from 'react-redux'
 import Toast from 'react-native-easy-toast'
 import EventBus from 'react-native-event-bus'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import NavigationUtil from '../navigator/NavigationUtil'
 import NavigationBar from '../common/NavigationBar'
@@ -44,6 +45,27 @@ class PopularPage extends Component<Props> {
     return tabs
   }
 
+  renderRightButton() {
+    const {theme} = this.props
+    return <TouchableOpacity
+      onPress={() => {
+        NavigationUtil.goPage({theme}, 'SearchPage')
+      }}
+      >
+      <View style={{padding: 5, marginRight: 8}}>
+        <Ionicons
+          name={'ios-search'}
+          size={24}
+          style={{
+            marginRight: 8,
+            alignSelf: 'center',
+            color: 'white'
+          }}
+          />
+      </View>
+    </TouchableOpacity>
+  }
+
   render() {
     const {keys, theme} = this.props
     let statusBar = {
@@ -54,6 +76,7 @@ class PopularPage extends Component<Props> {
       title={'popular'}
       statusBar={statusBar}
       style={theme.styles.navBar}
+      rightButton={this.renderRightButton()}
       />
     const TabNavigator = keys.length ? createAppContainer(createMaterialTopTabNavigator(
       this._genTabs(), {
@@ -142,12 +165,12 @@ class PopularTab extends Component<Props> {
     return <PopularItem
       projectModel={item}
       theme={theme}
-      onSelect={(callback) => {
+      onSelect={(callBack) => {
         NavigationUtil.goPage({
           theme,
           projectModel: item,
           flag: FLAG_STORAGE.flag_popular,
-          callback
+          callBack
         }, 'DetailPage')
       }}
       onFavorite={(item, isFavorite) => FavoriteUtil.onFavorite(

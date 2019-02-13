@@ -6,6 +6,7 @@ export const FLAG_STORAGE = {
   flag_trending: 'trending'
 }
 export default class DataStore {
+
   fetchData(url, flag) {
     return new Promise((resolve, reject) => {
       this.fetchLocalData(url).then((wrapData) => {
@@ -28,9 +29,9 @@ export default class DataStore {
     })
   }
 
-  saveData(url, data, callback) {
+  saveData(url, data, callBack) {
     if (!data || !url) return
-    AsyncStorage.setItem(url, JSON.stringify(this._wrapData(data)), callback)
+    AsyncStorage.setItem(url, JSON.stringify(this._wrapData(data)), callBack)
   }
 
   _wrapData(data) {

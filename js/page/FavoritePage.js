@@ -125,12 +125,12 @@ class FavoriteTab extends Component<Props> {
     return <Item
       projectModel={item}
       theme={theme}
-      onSelect={(callback) => {
+      onSelect={(callBack) => {
         NavigationUtil.goPage({
           theme,
           projectModel: item,
           flag: this.storeName,
-          callback
+          callBack
         }, 'DetailPage')
       }}
       onFavorite={(item, isFavorite) => this.onFavorite(item,
