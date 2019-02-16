@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should execute fetch data 1`] = `
+Object {
+  "projectModels": Array [
+    Object {
+      "projectModel": Object {
+        "isFavorite": true,
+        "item": Object {
+          "description": "The open source codebase and curriculum. Learn to code for free together with millions of people.",
+        },
+      },
+    },
+    Object {
+      "projectModel": Object {
+        "isFavorite": true,
+        "item": Object {
+          "description": "JavaScript Style Guide",
+        },
+      },
+    },
+    Object {
+      "projectModel": Object {
+        "isFavorite": true,
+        "item": Object {
+          "description": "技术面试必备基础知识",
+        },
+      },
+    },
+  ],
+  "type": "FAVORITE_LOAD_SUCCESS",
+}
+`;

@@ -12,7 +12,7 @@ import Types from '../../action/types'
       }
    }
 */
-const defaultState = {}
+export const defaultState = {}
 
 export default function onAction(state = defaultState, action) {
   switch (action.type) {
